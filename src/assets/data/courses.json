@@ -1,0 +1,61 @@
+{
+  "courses": [
+    {
+      "id": "anatomy-101",
+      "title": "التشريح 101",
+      "instructor": "د. سارة أحمد",
+      "thumbnail": "assets/images/anatomy.png",
+      "sections": [
+        {
+          "id": "anatomy-s1",
+          "title": "الجهاز الهيكلي",
+          "lessons": [
+            { "id": "anatomy-l1", "title": "مقدمة في التشريح", "durationSec": 35, "video": "assets/videos/lesson1.mp4" },
+            { "id": "anatomy-l2", "title": "العظام", "durationSec": 18, "video": "assets/videos/lesson2.mp4" },
+            { "id": "anatomy-l3", "title": "المفاصل", "durationSec": 24, "video": "assets/videos/lesson3.mp4" }
+          ]
+        },
+        {
+          "id": "anatomy-s2",
+          "title": "الجهاز العضلي",
+          "lessons": [
+            { "id": "anatomy-l4", "title": "أنواع العضلات", "durationSec": 35, "video": "assets/videos/lesson1.mp4" },
+            { "id": "anatomy-l5", "title": "انقباض العضلة", "durationSec": 25, "video": "assets/videos/missing.mp4" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "physiology-101",
+      "title": "علم وظائف الأعضاء",
+      "instructor": "د. محمد علي",
+      "thumbnail": "assets/images/physiology.jpg",
+      "sections": [
+        {
+          "id": "physiology-s1",
+          "title": "القلب والدورة الدموية",
+          "lessons": [
+            { "id": "physiology-l1", "title": "تركيب القلب", "durationSec": 18, "video": "assets/videos/lesson2.mp4" },
+            { "id": "physiology-l2", "title": "الدورة الدموية", "durationSec": 24, "video": "assets/videos/lesson3.mp4" }
+          ]
+        },
+        {
+          "id": "physiology-s2",
+          "title": "الجهاز التنفسي",
+          "lessons": [
+            { "id": "physiology-l3", "title": "الرئتان", "durationSec": 35, "video": "assets/videos/lesson1.mp4" },
+            { "id": "physiology-l4", "title": "تبادل الغازات", "durationSec": 24, "video": "assets/videos/lesson3.mp4" },
+            { "id": "physiology-l5", "title": "التحكم في التنفس", "durationSec": 18, "video": "assets/videos/lesson2.mp4" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pharmacology-101",
+      "title": "علم الأدوية (قريباً)",
+      "instructor": "د. منى حسن",
+      "thumbnail": "assets/images/anatomy.png",
+      "sections": []
+    }
+  ]
+}
