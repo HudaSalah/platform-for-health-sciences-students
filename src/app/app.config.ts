@@ -1,12 +1,16 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+
+import { routes } from './app.routes';
+import { ProgressStorage } from './core/services/progress-storage';
+import { LocalStorageProgressStorage } from './core/services/local-storage-progress-storage';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideHttpClient()
-  ]
+    provideHttpClient(),
+    { provide: ProgressStorage, useClass: LocalStorageProgressStorage },
+  ],
 };
