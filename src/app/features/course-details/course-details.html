@@ -1,1 +1,111 @@
-<p>course-details works!</p>
+<a class="back-link" routerLink="/courses">
+  <app-icon name="chevron-right" [size]="18" />
+  <span>الكورسات</span>
+</a>
+
+@switch (state().status) {
+  @case ('loading') {
+    <app-state-message type="loading" title="جارٍ تحميل الكورس..." />
+  }
+
+  @case ('error') {
+    <app-state-message
+      type="error"
+      title="تعذّر تحميل الكورس"
+      description="حدثت مشكلة أثناء تحميل البيانات. حاول مرة أخرى."
+    >
+      <button type="button" class="btn" (click)="retry()">إعادة المحاولة</button>
+    </app-state-message>
+  }
+
+  @case ('success') {
+    @if (course(); as course) {
+      <header class="course-header">
+        <img class="course-header__thumb" [src]="course.thumbnail" alt="" />
+        <div class="course-header__info">
+          <h1 class="course-header__title">{{ course.title }}</h1>
+          <p class="muted">{{ course.instructor }} · {{ formatLessonCount(orderedLessons().length) }}</p>
+
+          @if (orderedLessons().length > 0) {
+            <div class="course-header__progress">
+              <app-progress-bar [value]="percent()" label="نسبة الإنجاز في الكورس" />
+              <span>{{ percent() }}%</span>
+            </div>
+
+            @if (nextLesson(); as lesson) {
+              <a class="btn" [routerLink]="['/courses', course.id, 'lessons', lesson.id]">
+                <app-icon name="play" [size]="18" />
+                {{ hasStarted() ? 'تابع التعلم' : 'ابدأ الكورس' }}
+              </a>
+            }
+          }
+        </div>
+      </header>
+
+      @if (orderedLessons().length === 0) {
+        <app-state-message
+          type="empty"
+          title="لا توجد دروس في هذا الكورس بعد"
+          description="سيتم إضافة الدروس قريبًا، تابعنا."
+        >
+          <a class="btn btn--outline" routerLink="/courses">تصفح الكورسات الأخرى</a>
+        </app-state-message>
+      } @else {
+        @for (item of sections(); track item.section.id) {
+          <section class="section">
+            <h2 class="section__title">{{ item.section.title }}</h2>
+
+            @if (item.lessons.length === 0) {
+              <p class="section__empty muted">لا توجد دروس في هذا القسم.</p>
+            } @else {
+              <ol class="lessons">
+                @for (row of item.lessons; track row.lesson.id) {
+                  <li>
+                    @if (row.locked) {
+                      <div
+                        class="lesson lesson--locked"
+                        aria-disabled="true"
+                        title="أكمل الدرس السابق لفتح هذا الدرس"
+                      >
+                        <app-icon name="lock" class="lesson__icon" />
+                        <span class="lesson__number">{{ row.number }}.</span>
+                        <span class="lesson__title">{{ row.lesson.title }}</span>
+                        <span class="lesson__duration" dir="ltr">{{ formatDuration(row.lesson.durationSec) }}</span>
+                        <span class="badge badge--locked">مقفل</span>
+                      </div>
+                    } @else {
+                        <a
+                        class="lesson"
+                        [class]="'lesson lesson--' + row.status"
+                        [routerLink]="['/courses', course.id, 'lessons', row.lesson.id]"
+                      >
+                        <app-icon
+                          class="lesson__icon"
+                          [name]="row.status === 'completed' ? 'check' : row.status === 'in-progress' ? 'play' : 'circle'"
+                        />
+                        <span class="lesson__number">{{ row.number }}.</span>
+                        <span class="lesson__title">{{ row.lesson.title }}</span>
+                        <span class="lesson__duration" dir="ltr">{{ formatDuration(row.lesson.durationSec) }}</span>
+                        <span class="badge" [class]="'badge badge--' + row.status">
+                          {{ statusLabels[row.status] }}
+                        </span>
+                      </a>
+                    }
+                  </li>
+                }
+              </ol>
+            }
+          </section>
+        }
+      }
+    } @else {
+      <app-state-message
+        type="not-found"
+        title="الكورس غير موجود"
+        description="ربما تم حذف هذا الكورس أو أن الرابط غير صحيح."
+      >
+        <a class="btn" routerLink="/courses">العودة إلى الكورسات</a>
+      </app-state-message>
+    }
+  }
+}
