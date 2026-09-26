@@ -1,0 +1,98 @@
+<div class="player" #container [class.player--fullscreen]="isFullscreen()">
+  <div class="player__stage">
+    <video
+      #video
+      class="player__video"
+      [src]="src()"
+      preload="metadata"
+      playsinline
+      (click)="togglePlay()"
+      (loadstart)="onLoadStart()"
+      (loadedmetadata)="onLoadedMetadata()"
+      (canplay)="onCanPlay()"
+      (waiting)="onWaiting()"
+      (play)="isPlaying.set(true)"
+      (pause)="isPlaying.set(false)"
+      (timeupdate)="onTimeUpdate()"
+      (ended)="onEnded()"
+      (error)="onError()"
+    ></video>
+
+    @if (hasError()) {
+      <div class="player__overlay player__overlay--error" role="alert">
+        <p>تعذّر تشغيل الفيديو. قد يكون الملف غير موجود أو تالفًا.</p>
+        <button type="button" class="btn" (click)="retry()">إعادة المحاولة</button>
+      </div>
+    } @else if (isLoading()) {
+      <div class="player__overlay" aria-hidden="true">
+        <span class="spinner"></span>
+      </div>
+    } @else if (!isPlaying()) {
+      <button type="button" class="player__big-play" aria-label="تشغيل" (click)="togglePlay()">
+        <app-icon name="play" [size]="40" />
+      </button>
+    }
+  </div>
+
+  <div class="controls">
+    <div
+      #seekBar
+      class="seek"
+      role="slider"
+      tabindex="0"
+      aria-label="التنقل في الفيديو"
+      aria-valuemin="0"
+      [attr.aria-valuemax]="duration()"
+      [attr.aria-valuenow]="currentTime()"
+      [attr.aria-valuetext]="formatDuration(currentTime()) + ' من ' + formatDuration(duration())"
+      [style.--played]="playedPercent() + '%'"
+      [style.--marker]="completionMarker + '%'"
+      (pointerdown)="onSeekPointerDown($event)"
+      (pointermove)="onSeekPointerMove($event)"
+      (pointerup)="onSeekPointerUp($event)"
+      (pointercancel)="onSeekPointerUp($event)"
+    >
+      <div class="seek__track">
+        <div class="seek__played"></div>
+      </div>
+      <div class="seek__marker" title="يكتمل الدرس عند 90%"></div>
+      <div class="seek__thumb"></div>
+    </div>
+
+    <div class="controls__row">
+      <button
+        type="button"
+        class="control-btn"
+        [disabled]="hasError()"
+        [attr.aria-label]="isPlaying() ? 'إيقاف مؤقت' : 'تشغيل'"
+        (click)="togglePlay()"
+      >
+        <app-icon [name]="isPlaying() ? 'pause' : 'play'" />
+      </button>
+
+      <span class="controls__time" dir="ltr">
+        {{ formatDuration(currentTime()) }} / {{ formatDuration(duration()) }}
+      </span>
+
+      <span class="controls__spacer"></span>
+
+      <label class="speed">
+        <span class="sr-only">سرعة التشغيل</span>
+        <select (change)="onSpeedChange($event)">
+          @for (option of speeds; track option) {
+            <option [value]="option" [selected]="option === speed()">{{ option }}x</option>
+          }
+        </select>
+      </label>
+
+      <button
+        type="button"
+        class="control-btn"
+        [attr.aria-label]="isFullscreen() ? 'الخروج من ملء الشاشة' : 'ملء الشاشة'"
+        (click)="toggleFullscreen()"
+      >
+        <app-icon [name]="isFullscreen() ? 'fullscreen-exit' : 'fullscreen'" />
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,49 @@
-<p>lesson-player works!</p>
+@switch (state().status) {
+  @case ('loading') {
+    <app-state-message type="loading" title="جارٍ تحميل الدرس..." />
+  }
+
+  @case ('error') {
+    <app-state-message
+      type="error"
+      title="تعذّر تحميل الدرس"
+      description="حدثت مشكلة أثناء تحميل البيانات. حاول مرة أخرى."
+    >
+      <button type="button" class="btn" (click)="retry()">إعادة المحاولة</button>
+    </app-state-message>
+  }
+
+  @case ('success') {
+    @if (course(); as course) {
+      <a class="back-link" [routerLink]="['/courses', course.id]">
+        <app-icon name="chevron-right" [size]="18" />
+        <span>{{ course.title }}</span>
+      </a>
+
+      @if (lesson(); as lesson) {
+        <app-video-player [src]="lesson.video" />
+
+        <div class="lesson-info">
+          <h1 class="lesson-info__title">{{ lesson.title }}</h1>
+          <p class="muted">{{ course.title }}</p>
+        </div>
+      } @else {
+        <app-state-message
+          type="not-found"
+          title="الدرس غير موجود"
+          description="ربما تم حذف هذا الدرس أو أن الرابط غير صحيح."
+        >
+          <a class="btn" [routerLink]="['/courses', course.id]">العودة إلى الكورس</a>
+        </app-state-message>
+      }
+    } @else {
+      <app-state-message
+        type="not-found"
+        title="الكورس غير موجود"
+        description="ربما تم حذف هذا الكورس أو أن الرابط غير صحيح."
+      >
+        <a class="btn" routerLink="/courses">العودة إلى الكورسات</a>
+      </app-state-message>
+    }
+  }
+}
