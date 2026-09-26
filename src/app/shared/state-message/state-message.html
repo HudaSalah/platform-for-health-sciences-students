@@ -1,0 +1,14 @@
+<section
+      class="state"
+      [class.state--error]="type() === 'error'"
+      [attr.role]="type() === 'error' ? 'alert' : 'status'"
+    >
+      @if (type() === 'loading') {
+        <span class="spinner" aria-hidden="true"></span>
+      }
+      <h2 class="state__title">{{ title() }}</h2>
+      @if (description()) {
+        <p class="state__description">{{ description() }}</p>
+      }
+      <ng-content />
+    </section>

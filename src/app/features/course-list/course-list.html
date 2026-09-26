@@ -1,1 +1,62 @@
-<p>course-list works!</p>
+@switch (state().status) {
+  @case ('loading') {
+    <app-state-message type="loading" title="جارٍ تحميل الكورسات..." />
+  }
+
+  @case ('error') {
+    <app-state-message
+      type="error"
+      title="تعذّر تحميل الكورسات"
+      description="حدثت مشكلة أثناء تحميل البيانات. حاول مرة أخرى."
+    >
+      <button type="button" class="btn" (click)="retry()">إعادة المحاولة</button>
+    </app-state-message>
+  }
+
+  @case ('success') {
+    @if (continueWatching(); as item) {
+      <a class="continue" [routerLink]="['/courses', item.course.id, 'lessons', item.lesson.id]">
+        <img class="continue__thumb" [src]="item.course.thumbnail" alt="" />
+        <div class="continue__body">
+          <span class="continue__label">استكمل المشاهدة</span>
+          <strong class="continue__title">{{ item.lesson.title }}</strong>
+          <span class="muted">{{ item.course.title }}</span>
+          <app-progress-bar [value]="item.percent" label="نسبة مشاهدة الدرس" />
+        </div>
+        <span class="continue__time muted" dir="ltr">
+          {{ formatDuration(item.positionSec) }} / {{ formatDuration(item.lesson.durationSec) }}
+        </span>
+      </a>
+    }
+
+    <h1 class="page-title">كورساتي</h1>
+
+    @if (cards().length === 0) {
+      <app-state-message
+        type="empty"
+        title="لا توجد كورسات بعد"
+        description="عند شرائك لأي كورس سيظهر هنا."
+      />
+    } @else {
+      <ul class="grid">
+        @for (card of cards(); track card.course.id) {
+          <li>
+            <a class="card" [routerLink]="['/courses', card.course.id]">
+              <img class="card__thumb" [src]="card.course.thumbnail" alt="" loading="lazy" />
+              <div class="card__body">
+                <h2 class="card__title">{{ card.course.title }}</h2>
+                <p class="card__meta muted">
+                  {{ card.course.instructor }} · {{ formatLessonCount(card.lessonCount) }}
+                </p>
+                <div class="card__progress">
+                  <app-progress-bar [value]="card.percent" [label]="'نسبة الإنجاز في ' + card.course.title" />
+                  <span class="card__percent">{{ card.percent }}%</span>
+                </div>
+              </div>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  }
+}
