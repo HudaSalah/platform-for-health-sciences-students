@@ -32,8 +32,8 @@
               { "glob": "**/*", "input": "src/assets", "output": "assets" }
             ],
             "styles": [
-               "node_modules/@fontsource/cairo/400.css",
-               "node_modules/@fontsource/cairo/600.css",
+              "node_modules/@fontsource/cairo/400.css",
+              "node_modules/@fontsource/cairo/600.css",
               "src/styles.scss"
             ]
           },
@@ -75,6 +75,9 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
