@@ -4,11 +4,7 @@
   }
 
   @case ('error') {
-    <app-state-message
-      type="error"
-      title="تعذّر تحميل الدرس"
-      description="حدثت مشكلة أثناء تحميل البيانات. حاول مرة أخرى."
-    >
+    <app-state-message type="error" title="تعذّر تحميل الدرس" description="حاول مرة أخرى.">
       <button type="button" class="btn" (click)="retry()">إعادة المحاولة</button>
     </app-state-message>
   }
@@ -17,31 +13,58 @@
     @if (course(); as course) {
       <a class="back-link" [routerLink]="['/courses', course.id]">
         <app-icon name="chevron-right" [size]="18" />
-        <span>{{ course.title }}</span>
+        {{ course.title }}
       </a>
 
       @if (lesson(); as lesson) {
-        <app-video-player [src]="lesson.video" />
+        
+        <app-video-player
+          [src]="lesson.video"
+          [startAt]="startAt()"
+          [playbackRate]="playbackRate()"
+          (progressChange)="onProgress($event)"
+          (playbackRateChange)="onSpeedChange($event)"
+        />
 
         <div class="lesson-info">
-          <h1 class="lesson-info__title">{{ lesson.title }}</h1>
-          <p class="muted">{{ course.title }}</p>
+          
+          <div>
+            <h1 class="lesson-info__title">
+              {{ lesson.title }}
+              @if (isCompleted()) {
+                <span class="completed-badge">✓ مكتمل</span>
+              }
+            </h1>
+            <p class="muted">{{ course.title }}</p>
+          </div>
+
+          
+          <div class="lesson-info__actions">
+            @if (nextLesson(); as next) {
+              @if (isCompleted()) {
+                <a class="btn" [routerLink]="['/courses', course.id, 'lessons', next.id]">
+                  الدرس التالي
+                  <app-icon name="chevron-left" [size]="18" />
+                </a>
+              } @else {
+                <button type="button" class="btn" disabled>
+                  الدرس التالي
+                  <app-icon name="chevron-left" [size]="18" />
+                </button>
+                <small class="muted">شاهد 90% من الدرس لفتح الدرس التالي</small>
+              }
+            } @else if (isCompleted()) {
+              <p class="finished">أحسنت! أنهيت جميع دروس الكورس</p>
+            }
+          </div>
         </div>
       } @else {
-        <app-state-message
-          type="not-found"
-          title="الدرس غير موجود"
-          description="ربما تم حذف هذا الدرس أو أن الرابط غير صحيح."
-        >
+        <app-state-message type="not-found" title="الدرس غير موجود">
           <a class="btn" [routerLink]="['/courses', course.id]">العودة إلى الكورس</a>
         </app-state-message>
       }
     } @else {
-      <app-state-message
-        type="not-found"
-        title="الكورس غير موجود"
-        description="ربما تم حذف هذا الكورس أو أن الرابط غير صحيح."
-      >
+      <app-state-message type="not-found" title="الكورس غير موجود">
         <a class="btn" routerLink="/courses">العودة إلى الكورسات</a>
       </app-state-message>
     }

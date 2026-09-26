@@ -75,7 +75,7 @@ export class VideoPlayer {
     video.playbackRate = this.speed();
 
     const startAt = this.startAt();
-    if (startAt > 0 && startAt < video.duration) {
+    if (startAt > 0 && startAt < video.duration - 2) {
       video.currentTime = startAt;
       this.currentTime.set(startAt);
     }

@@ -88,3 +88,8 @@ video {
   white-space: nowrap;
   border: 0;
 }
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

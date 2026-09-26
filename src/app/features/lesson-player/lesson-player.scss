@@ -5,14 +5,51 @@
 }
 
 .lesson-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space);
   padding-block: var(--space);
+
+  p {
+    margin: 4px 0 0;
+  }
 }
 
 .lesson-info__title {
-  margin: 0 0 4px;
+  margin: 0;
   font-size: 1.4rem;
 }
 
-.lesson-info p {
-  margin: 0;
+.completed-badge {
+  font-size: 0.8rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: var(--color-success);
+  background: #dcfce7;
+  vertical-align: middle;
+}
+
+.lesson-info__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.finished {
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+
+@media (max-width: 640px) {
+  .lesson-info {
+    flex-direction: column;
+  }
+
+  .lesson-info__actions {
+    align-items: stretch;
+    width: 100%;
+  }
 }
